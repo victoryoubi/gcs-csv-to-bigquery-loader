@@ -29,6 +29,10 @@ def main(event, context):
         print(f"⏭️ スキップ: {file_name} はCSVではありません")
         return
 
+    if file_name.startswith('fixed/'):
+        print(f"⏭️ fixed フォルダ内のファイルは無視します: {file_name}")
+        return
+
     print(f"📥 GCSからCSVを取得: {bucket_name}/{file_name}")
 
     # GCSクライアントの初期化
