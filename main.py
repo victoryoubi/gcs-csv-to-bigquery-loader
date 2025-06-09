@@ -4,7 +4,7 @@ from google.cloud import storage, bigquery
 
 EXPECTED_COLUMNS = 41
 PROJECT_ID = "opproject-459908"
-DATASET = "sns_meltwater"
+DATASET = "SNS"
 TABLE = "MeltWater"
 
 def fix_csv_columns(input_path, output_path):
