@@ -77,13 +77,11 @@ def upload_to_bigquery(gcs_uri):
         encoding="UTF-8",
     )
 
-    load_job = client.load_table_from_uri(gcs_uri, table_id, job_config=job_config)
-
     try:
-        load_job.result()
-        print(f"✅ BigQueryへロード完了: {table_id}")
+        load_job = client.load_table_from_uri(gcs_uri, table_id, job_config=job_config)
+        print(f"▶️ BigQuery LoadJob started: {load_job.job_id}")
+        load_job.result()  # ✅ ここで失敗すると例外になる
+        print(f"✅ BigQuery 取込成功: {table_id}")
     except Exception as e:
-        print(f"❌ BigQueryへのロード失敗: {e}")
-        if load_job.errors:
-            for err in load_job.errors:
-                print(f"↪ 詳細: {err}")
+        print(f"❌ BigQuery 取込失敗: {e}")
+        raise  # エラーをCloud Functionsのログに残す
