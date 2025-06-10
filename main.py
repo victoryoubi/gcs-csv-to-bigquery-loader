@@ -20,6 +20,8 @@ def ensure_fixed_column_count(input_path, output_path, expected_cols=42):
             writer.writerow(row)
 
 # --- メイン関数（Cloud Function） ---
+import re
+
 def main(event, context):
     file_data = event
     file_name = file_data['name']
@@ -29,9 +31,11 @@ def main(event, context):
         print(f"⏭️ スキップ: {file_name} はCSVではありません")
         return
 
-    if file_name.startswith('fixed/'):
+    # ✅ fixed配下にあるすべてのファイルをスキップ
+    if file_name.startswith("fixed/") or "/fixed/" in file_name:
         print(f"⏭️ fixed フォルダ内のファイルは無視します: {file_name}")
         return
+
 
     print(f"📥 GCSからCSVを取得: {bucket_name}/{file_name}")
 
