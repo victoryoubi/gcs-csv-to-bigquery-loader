@@ -78,6 +78,12 @@ def upload_to_bigquery(gcs_uri):
     )
 
     load_job = client.load_table_from_uri(gcs_uri, table_id, job_config=job_config)
-    load_job.result()
-    print(f"✅ BigQueryへロード完了: {table_id}")
 
+    try:
+        load_job.result()
+        print(f"✅ BigQueryへロード完了: {table_id}")
+    except Exception as e:
+        print(f"❌ BigQueryへのロード失敗: {e}")
+        if load_job.errors:
+            for err in load_job.errors:
+                print(f"↪ 詳細: {err}")
