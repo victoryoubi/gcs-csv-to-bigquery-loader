@@ -8,15 +8,17 @@ PROJECT = "opproject-459908"
 DATASET = "SNS"
 TABLE = "MeltWater"
 
-# --- CSVの列数を揃える関数 ---
+
+# --- CSVの列数を揃える関数（空行スキップ付き） ---
 def ensure_fixed_column_count(input_path, output_path, expected_cols=42):
     with open(input_path, 'r', encoding='utf-8') as infile, open(output_path, 'w', encoding='utf-8', newline='') as outfile:
         reader = csv.reader(infile)
         writer = csv.writer(outfile)
         for row in reader:
-            # ✅ 空行はスキップ
-            if not any(cell.strip() for cell in row):
+            # ✅ 空行またはすべて空の行をスキップ
+            if not row or all(cell.strip() == '' for cell in row):
                 continue
+            # 列数を調整
             if len(row) < expected_cols:
                 row += [''] * (expected_cols - len(row))
             elif len(row) > expected_cols:
